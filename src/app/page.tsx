@@ -1,103 +1,120 @@
-import Image from "next/image";
+import Perspective from "@/components/Perspective";
+import LogoRotator from "@/components/LogoRotator";
+import FeatureBoxes from "@/components/FeatureBoxes";
+import fs from "node:fs";
+import path from "node:path";
+
+
 
 export default function Home() {
+  // Build-time read of public/icons/logos to collect image paths
+  const logosDir = path.join(process.cwd(), "public", "icons", "logos");
+  let allLogos: string[] = [];
+  try {
+    allLogos = fs
+      .readdirSync(logosDir, { withFileTypes: true })
+      .filter((e) => e.isFile() && /(\.svg|\.png)$/i.test(e.name))
+      .map((e) => `/icons/logos/${e.name}`)
+      .sort();
+  } catch {
+    allLogos = [];
+  }
+  // Ensure exactly 6 groups of 3 (fallbacks if fewer files)
+  const safe = allLogos.length > 0 ? allLogos : [
+    "/icons/logos/Vercel_Logo_0.svg",
+    "/icons/logos/Ramp_idB_fuD3sk_0.svg",
+    "/icons/logos/Brex_idwr3R84k6_0.svg",
+    "/icons/logos/Monzo_idUoZh4d3__0.svg",
+    "/icons/logos/Scale AI_idG5AdKF6r_0.svg",
+    "/icons/logos/Raycast_idFXwWODyV_0.svg",
+    "/icons/logos/Runway_idHapR91Bz_0.svg",
+    "/icons/logos/Retool_Logo_0.svg",
+    "/icons/logos/Remote_idvc80hKJj_0.svg",
+  ];
+  const groups: string[][] = Array.from({ length: 6 }, (_, i) =>
+    Array.from({ length: 3 }, (_, j) => safe[(i * 3 + j) % safe.length])
+  );
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div className="relative isolate max-w-5xl mx-auto">
+          <header className="fixed inset-x-0 top-0 z-40 border-b border-white/10 bg-[rgb(10_10_15_/_0.6)] backdrop-blur-md backdrop-saturate-150">
+              <div className="flex h-16 px-6 items-center justify-between gap-6">
+                <a href="/" className="flex items-center gap-3">
+                  <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden className="shrink-0">
+                    <defs>
+                      <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stopColor="#8b5cf6" />
+                        <stop offset="100%" stopColor="#22d3ee" />
+                      </linearGradient>
+                    </defs>
+                    <circle cx="12" cy="12" r="10" fill="url(#lg)" opacity="0.9" />
+                  </svg>
+                  <span className="text-sm font-semibold tracking-tight">Linear</span>
+                </a>
+                <nav className="hidden md:flex items-center gap-8 text-sm text-white/70">
+                  <a href="#product" className="hover:text-white">Product</a>
+                  <a href="#resources" className="hover:text-white">Resources</a>
+                  <a href="#pricing" className="hover:text-white">Pricing</a>
+                  <a href="#customers" className="hover:text-white">Customers</a>
+                  <a href="#now" className="hover:text-white">Now</a>
+                  <a href="#contact" className="hover:text-white">Contact</a>
+                </nav>
+                <div className="flex items-center gap-3">
+                  <a href="#login" className="text-sm text-white/70 hover:text-white">Log in</a>
+                  <a
+                    href="#signup"
+                    className="inline-flex h-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.06] px-4 text-sm font-medium text-white/80 transition-colors hover:bg-white/10 hover:text-white"
+                  >
+                    Sign up
+                  </a>
+                </div>
+              </div>
+          </header>
+      <section className="relative mx-auto max-w-5xl px-6">
+        <div className="flex items-left">
+          <div className="relative mt-20 z-10 text-center md:text-left">
+            <h1 className=" text-5xl font-semibold leading-[1.05] tracking-tight sm:text-6xl">
+              Linear is a purpose-built tool for planning and building products
+            </h1>
+            <p className="mt-5 max-w-xl text-balance text-white/70 mx-auto md:mx-0">
+              Meet the system for modern software development. Streamline issues, projects, and product roadmaps.
+            </p>
+            <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row md:items-start">
+              <a href="#start" className="inline-flex p-4 py-2 items-center justify-center rounded-lg border border-white/10 bg-white/80 px-6 text-sm font-medium text-black/80 transition-colors hover:bg-white/90 ">Start building</a>
+              <div className="text-md hover:bg-white/20 rounded-md">
+              <a href="#intelligence" className="inline-flex p-4 py-2 items-center justify-center  bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent gap-4">
+                New: Product Intelligence <span aria-hidden className="text-xl">›</span>
+              </a>
+              </div>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <Perspective> 
+          <div className="w-full h-36 bg-red-500" 
+        style={{
+          transformStyle: 'preserve-3d'
+}}>HI THIS IS A TEST</div></Perspective>
+
+      </section>
+      {/* Logos section (rotator) */}
+      <section className="relative mx-auto max-w-7xl px-6 pb-20">
+        <div className="text-center">
+          <h2 className="text-2xl font-medium text-white">Powering the world’s best product teams.</h2>
+          <p className="mt-1 text-2xl text-white/70">From next-gen startups to established enterprises.</p>
+        </div>
+        <div className="mt-8">
+          <LogoRotator groups={groups} intervalMs={3000} />
+        </div>
+      </section>
+      {/* Modern product teams section */}
+      <section className="relative mx-auto px-6 pb-24">
+        <div className="text-left">
+          <h2 className="text-5xl font-semibold text-white">Made for modern product teams</h2>
+          <p className="mt-3 text-white/70 max-w-2xl text-balance">
+            Linear is shaped by the practices and principles that distinguish world-class product teams from the rest: relentless focus, fast execution, and a commitment to the quality of craft. <span className="text-white">Make the switch &gt;</span>
+          </p>
+        </div>
+        <FeatureBoxes />
+      </section>
     </div>
   );
 }
