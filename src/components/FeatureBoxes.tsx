@@ -99,8 +99,7 @@ export default function FeatureBoxes() {
               We believe that this approach creates a better way to build products. And more than 15,000 product teams around the globe – from early-stage startups to public companies – agree.
             </p>
           </div>
-
-          <div className="w-full max-w-4xl bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+          <div className="my-10 h-px w-full max-w-4xl bg-gradient-to-r from-transparent via-white/20 to-transparent" />
           <div className=" rounded-xl border border-white/10 bg-white/5 p-6 text-white/80">
             <p className="italic">
               “We’d tried many tools before Linear but none of them felt like they were made for the way we work. Linear was a breath of fresh air - speedy, snappy, and a pleasure to use.”
@@ -244,24 +243,7 @@ export default function FeatureBoxes() {
 
       {/* Expanding overlay */}
       {active && (
-        <div className="fixed inset-0 z-50">
-        <div style={{
-                position: 'fixed',
-                inset: '5vh 0 0 0',
-                marginInline: 'auto',
-                maxWidth: '960px',
-                background: '#0f1011',
-                zIndex: '700',
-                borderRadius: '30px 30px 0 0',
-                outline: 'none',
-                contain: 'strict',
-                isolation: 'isolate',
-                pointerEvents: 'auto',
-                transform: 'none',
-                transformOrigin: '50% 50% 0px',
-                
-        }}>
-        <div className="relative w-full h-full flex justify-center inset-0 backdrop-blur-sm" aria-modal="true" role="dialog">
+        <div className="fixed inset-0 z-50" aria-modal="true" role="dialog">
           <div
             className={`absolute inset-0 bg-black/70 backdrop-blur-sm transition-opacity duration-300 ${expanded ? "opacity-100" : "opacity-0"}`}
             onClick={close}
@@ -269,7 +251,7 @@ export default function FeatureBoxes() {
           <div
             ref={overlayRef}
             onTransitionEnd={handleTransitionEnd}
-            className="absolute left-0 top-0 h-[100vh] w-[100vw] border border-white/10 bg-white/5 shadow-2xl"
+            className="absolute left-0 top-0 h-[100vh] w-[100vw] overflow-hidden border border-white/10 bg-white/5 shadow-2xl"
             style={(function() {
               const { transform, origin } = computeTransform(active.rect, active.side);
               const styleObj: React.CSSProperties = {
@@ -281,12 +263,10 @@ export default function FeatureBoxes() {
               return styleObj;
             })()}
           >
-            <div className={`relative h-full w-full transition-opacity duration-300 ${expanded ? "opacity-100" : "opacity-0"}`}>
+            <div className={`h-full w-full transition-opacity duration-300 ${expanded ? "opacity-100" : "opacity-0"}`}>
               {renderOverlayContent()}
             </div>
           </div>
-        </div>
-        </div>
         </div>
       )}
     </>

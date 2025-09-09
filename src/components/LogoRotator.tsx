@@ -10,9 +10,18 @@ type LogoRotatorProps = {
 export default function LogoRotator({ groups, intervalMs = 1000 }: LogoRotatorProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [prevIndex, setPrevIndex] = useState(0);
-  const [initializing, setInitializing] = useState(true);
+  const [hasRotated, setHasRotated] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [effectiveInterval, setEffectiveInterval] = useState(intervalMs);
+  const [isIntervalReady, setIsIntervalReady] = useState(false);
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hasRotatedRef = useRef(false);
+  const generationRef = useRef(0);
+  const activeIndexRef = useRef(0);
+  const prevIndexRef = useRef(0);
+  const durationsRef = useRef({ in: 1200, out: 1400, delayIn: 300 });
+  const [prevVisible, setPrevVisible] = useState(false);
+  const prevHideTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const maxItems = useMemo(() => {
     return groups.length > 0 ? Math.max(...groups.map((g) => Math.max(1, g.length))) : 1;
@@ -21,11 +30,6 @@ export default function LogoRotator({ groups, intervalMs = 1000 }: LogoRotatorPr
   const flatLogos =   useMemo(() => {
     return groups.flat();
   }, [groups]);
-
-  useEffect(() => {
-    const raf = requestAnimationFrame(() => setInitializing(false));
-    return () => cancelAnimationFrame(raf);
-  }, []);
 
   // Sync JS interval to CSS animation durations + delay so handoff aligns
   useEffect(() => {
@@ -46,17 +50,54 @@ export default function LogoRotator({ groups, intervalMs = 1000 }: LogoRotatorPr
     const totalIn = delayIn + durationIn;
     const newInterval = Math.max(durationOut, totalIn);
     setEffectiveInterval(Math.max(intervalMs, newInterval));
+    setIsIntervalReady(true);
+    durationsRef.current = { in: durationIn, out: durationOut, delayIn };
   }, [intervalMs]);
 
+  // Use recursive timeout so we can precisely control first tick and avoid overlap
   useEffect(() => {
-    const id = setInterval(() => {
-      setActiveIndex((current) => {
-        setPrevIndex(current);
-        return (current + 1) % maxItems;
-      });
-    }, effectiveInterval);
-    return () => clearInterval(id);
-  }, [effectiveInterval, maxItems]);
+    if (!isIntervalReady) return;
+    generationRef.current += 1;
+    const gen = generationRef.current;
+    activeIndexRef.current = activeIndex;
+    prevIndexRef.current = prevIndex;
+    setPrevVisible(false);
+    const schedule = () => {
+      if (generationRef.current !== gen) {
+        return;
+      }
+      timeoutRef.current = setTimeout(() => {
+        if (generationRef.current !== gen) {
+          return;
+        }
+        const prev = activeIndexRef.current;
+        const next = (prev + 1) % maxItems;
+        setPrevIndex(prev);
+        setActiveIndex(next);
+        prevIndexRef.current = prev;
+        activeIndexRef.current = next;
+        // Show prev only during its out animation window
+        setPrevVisible(true);
+        if (prevHideTimeoutRef.current) clearTimeout(prevHideTimeoutRef.current);
+        const outMs = durationsRef.current.out;
+        prevHideTimeoutRef.current = setTimeout(() => {
+          if (generationRef.current !== gen) return;
+          setPrevVisible(false);
+        }, outMs);
+        if (!hasRotatedRef.current) {
+          hasRotatedRef.current = true;
+          setHasRotated(true);
+        }
+        schedule();
+      }, effectiveInterval);
+    };
+    schedule();
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+      if (prevHideTimeoutRef.current) clearTimeout(prevHideTimeoutRef.current);
+      generationRef.current += 1; // invalidate any queued callbacks
+    };
+  }, [effectiveInterval, maxItems, isIntervalReady]);
 
   return (
     <div ref={containerRef} className="relative group mx-auto max-w-7xl p-6 logo-rotator">
@@ -69,7 +110,7 @@ export default function LogoRotator({ groups, intervalMs = 1000 }: LogoRotatorPr
           const altPrev = prevSrc.split("/").pop()?.replace(/[-_]/g, " ") ?? "logo";
           return (
             <div key={idx} className="relative h-10 w-[100px] flex items-center justify-center">
-              {prevSrc && !initializing && (
+              {prevSrc && hasRotated && prevVisible && (
                 <img
                   key={prevSrc + "-out"}
                   src={prevSrc}
@@ -85,7 +126,7 @@ export default function LogoRotator({ groups, intervalMs = 1000 }: LogoRotatorPr
                 alt={altCurrent}
                 className={
                   "absolute inset-0 m-auto h-full max-h-10 w-full max-w-[100px] object-contain logo-img " +
-                  (initializing ? "logo-initial" : "logo-cur")
+                  (hasRotated ? "logo-cur" : "logo-initial")
                 }
                 loading="lazy"
               />
@@ -117,8 +158,8 @@ export default function LogoRotator({ groups, intervalMs = 1000 }: LogoRotatorPr
         /* Editable animation design tokens */
         .logo-rotator {
           --scale-hidden: 0.6;
-          --duration-in: 1200ms;
-          --duration-out: 1400ms;
+          --duration-in: 800ms;
+          --duration-out: 800ms;
           --blur-hidden: 8px;
           --delay-in: 300ms; /* delay before the incoming logo starts animating */
         }

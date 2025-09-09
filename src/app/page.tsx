@@ -39,16 +39,8 @@ export default function Home() {
           <header className="fixed inset-x-0 top-0 z-40 border-b border-white/10 bg-[rgb(10_10_15_/_0.6)] backdrop-blur-md backdrop-saturate-150">
               <div className="flex h-16 px-6 items-center justify-between gap-6">
                 <a href="/" className="flex items-center gap-3">
-                  <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden className="shrink-0">
-                    <defs>
-                      <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
-                        <stop offset="0%" stopColor="#8b5cf6" />
-                        <stop offset="100%" stopColor="#22d3ee" />
-                      </linearGradient>
-                    </defs>
-                    <circle cx="12" cy="12" r="10" fill="url(#lg)" opacity="0.9" />
-                  </svg>
-                  <span className="text-sm font-semibold tracking-tight">Linear</span>
+                  <img src="/icons/linear-logo.svg" alt="Linear" className="w-6 h-6" />
+                  <span className="text-md font-semibold tracking-tight">Linear</span>
                 </a>
                 <nav className="hidden md:flex items-center gap-8 text-sm text-white/70">
                   <a href="#product" className="hover:text-white">Product</a>
@@ -88,11 +80,136 @@ export default function Home() {
             </div>
           </div>
         </div>
-        <Perspective> 
-          <div className="w-full h-36 bg-red-500" 
-        style={{
-          transformStyle: 'preserve-3d'
-}}>HI THIS IS A TEST</div></Perspective>
+        <Perspective>
+          <div className="relative w-full h-full grid grid-cols-[760px_1fr]">
+            <aside className="h-full border-r border-white/10 bg-white/[0.02] overflow-hidden">
+              <div className="h-full grid grid-cols-[220px_1fr]">
+                <div className="h-full border-r border-white/10 px-3 py-4 overflow-auto">
+                  <div className="px-2 py-1 text-xs font-semibold tracking-wide text-white/70">Linear</div>
+                  <nav className="mt-2 space-y-1 text-sm">
+                    <a className="flex items-center gap-2 rounded-md px-2 py-2 hover:bg-white/[0.04]" href="#">
+                      <span className="inline-block h-2 w-2 rounded-full bg-[var(--primary)]" />
+                      <span className="text-white/80">Inbox</span>
+                    </a>
+                    <a className="flex items-center gap-2 rounded-md px-2 py-2 hover:bg-white/[0.04]" href="#">
+                      <span className="inline-block h-2 w-2 rounded-full bg-white/30" />
+                      <span className="text-white/70">My issues</span>
+                    </a>
+                  </nav>
+                  <div className="mt-4 px-2 text-[11px] uppercase tracking-wide text-white/40">Workspace</div>
+                  <nav className="mt-2 space-y-1 text-sm">
+                    {['Initiatives','Projects','Views','Teams'].map((label) => (
+                      <a key={label} className="flex items-center gap-2 rounded-md px-2 py-2 hover:bg-white/[0.04]" href="#">
+                        <span className="inline-block h-4 w-4 rounded-sm bg-white/10" />
+                        <span className="text-white/70">{label}</span>
+                      </a>
+                    ))}
+                  </nav>
+                  <div className="mt-4 px-2 text-[11px] uppercase tracking-wide text-white/40">Favorites</div>
+                  <nav className="mt-2 space-y-1 text-sm">
+                    {['Mobile App','2024 Roadmap','Projects','Docs'].map((label) => (
+                      <a key={label} className="flex items-center gap-2 rounded-md px-2 py-2 hover:bg-white/[0.04]" href="#">
+                        <span className="inline-block h-4 w-4 rounded-sm bg-[rgba(0,212,255,.25)] border border-white/10" />
+                        <span className="text-white/70">{label}</span>
+                      </a>
+                    ))}
+                  </nav>
+                </div>
+                <div className="h-full overflow-hidden">
+                  <div className="px-5 py-4 flex items-center justify-between border-b border-white/10">
+                    <h3 className="text-sm font-medium text-white/80">Inbox</h3>
+                    <span className="text-xs text-white/50">12</span>
+                  </div>
+                  <div className="px-4 py-3 border-b border-white/10">
+                    <div className="relative">
+                      <input
+                        className="w-full bg-white/[0.04] border border-white/10 rounded-md py-2 pl-8 pr-2 text-sm placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-[rgba(0,212,255,0.55)]"
+                        placeholder="Search"
+                      />
+                      <svg
+                        className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-white/40"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden
+                      >
+                        <path d="M12.9 14.32a8 8 0 1 1 1.41-1.41l3.79 3.8-1.42 1.41-3.78-3.8ZM8 14a6 6 0 1 0 0-12 6 6 0 0 0 0 12Z" />
+                      </svg>
+                    </div>
+                  </div>
+                  <ul className="divide-y divide-white/5 overflow-auto h-[calc(100%-106px)]">
+                    {Array.from({ length: 12 }).map((_, i) => (
+                      <li key={i} className="p-4 hover:bg-white/[0.04] cursor-default">
+                        <div className="flex items-center justify-between">
+                          <p className="text-sm text-white">ENG-{135 + i} Refactor sonic crawler</p>
+                          <div className="flex items-center gap-3">
+                            <span className="text-[10px] text-white/50">{i % 3 === 0 ? '1d' : i % 2 === 0 ? '2h' : '4d'}</span>
+                            <svg className="h-4 w-4 text-white/40" viewBox="0 0 20 20" fill="currentColor"><path d="m10 15-4.33 2.28.83-4.84L3 8.72l4.87-.71L10 3l2.13 5.01 4.87.71-3.5 3.72.83 4.84z"/></svg>
+                          </div>
+                        </div>
+                        <div className="mt-1 flex items-center gap-2 text-xs text-white/60">
+                          <span className="inline-block h-2 w-2 rounded-full" style={{ backgroundColor: i % 2 === 0 ? '#22c55e' : '#f59e0b' }} />
+                          <span>{i % 2 === 0 ? 'LLM Chatbot' : 'Upload API'}</span>
+                          <span className="text-white/40">·</span>
+                          <span>New project update by raissa</span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </aside>
+            <main className="h-full overflow-hidden">
+              <div className="border-b border-white/10 px-6 py-4 flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2 text-white/60">
+                  <span>Engineering</span>
+                  <span className="text-white/30">›</span>
+                  <span>Spice harvester</span>
+                  <span className="text-white/30">›</span>
+                  <span className="text-white">ENG-135</span>
+                </div>
+                <div className="hidden md:flex items-center gap-2 text-white/60">
+                  <button className="btn btn-ghost h-7 px-3 text-xs">Add sub-issues</button>
+                  <button className="btn btn-ghost h-7 px-3 text-xs">Links</button>
+                </div>
+              </div>
+              <div className="px-6 py-6 space-y-6 overflow-auto h-[calc(100%-49px)]">
+                <h2 className="text-2xl font-semibold text-white">Refactor sonic crawler</h2>
+                <div className="flex flex-wrap gap-2">
+                  <span className="badge-muted">Open</span>
+                  <span className="badge-muted">Priority: Medium</span>
+                  <span className="badge-muted">Assignee: nan</span>
+                </div>
+                <div className="glass rounded-md p-4 text-sm text-white/80">
+                  <p>comment.documentContent is defined wrongly; it should be updated to the new document schema.</p>
+                </div>
+                <div className="rounded-md border border-white/10 bg-black/30 p-4">
+                  <pre className="text-xs text-white/80 overflow-x-auto">
+                    <code>{`/** The document content of this comment */\npublic documentContent: DocumentContent`}</code>
+                  </pre>
+                </div>
+                <div className="space-y-2">
+                  <p className="text-sm text-white/70">We would be accessing cached property touch on the document when rendering.</p>
+                  <div className="rounded-md border border-white/10 bg-black/30 px-3 py-2 text-sm text-white/80">property.touch</div>
+                </div>
+                <div className="pt-2 border-t border-white/10">
+                  <div className="flex items-center gap-3">
+                    <input className="flex-1 bg-white/[0.04] border border-white/10 rounded-md py-2 px-3 text-sm placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-[rgba(0,212,255,0.55)]" placeholder="Add a comment" />
+                    <button className="btn btn-gold h-8 px-4 text-xs">Comment</button>
+                  </div>
+                </div>
+              </div>
+            </main>
+          </div>
+        </Perspective>
+        {/* Bottom fade overlay for transition to next section */}
+        <div
+          aria-hidden
+          className="pointer-events-none w-screen absolute left-0 inset-x-0 bottom-0 h-64"
+          style={{
+            background:
+              'linear-gradient(180deg, rgba(10,10,15,0) 0%, rgba(10,10,15,0.9) 45%, rgba(10,10,15,1) 75%, var(--background) 100%)'
+          }}
+        />
 
       </section>
       {/* Logos section (rotator) */}

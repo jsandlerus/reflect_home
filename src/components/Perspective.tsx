@@ -65,7 +65,7 @@ export default function Perspective({
         background: '#08090a',
         width: '1600px',
         height: '900px',
-        margin: '120px auto auto',
+        margin: '200px auto auto',
         transformOrigin: 'top left',
         backfaceVisibility: 'hidden',
         transformStyle: 'preserve-3d',
